@@ -1,5 +1,6 @@
 # Widgets Helper Class
-[![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)   
+[![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+![Downloads](https://img.shields.io/packagist/dt/wpbp/widgets-helper.svg) 
 
 A class that extends the built-in WP_Widget class to provide an easier/faster way to create Widgets for WordPress.   
 This is a fork of the original version with updates from the pull request on the official projects and few little improvements.
