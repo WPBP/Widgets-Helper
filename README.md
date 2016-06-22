@@ -15,7 +15,7 @@ Custom form fields creation
 
 ## Example
 
-```
+```php
 class MV_My_Recent_Posts_Widget extends WPH_Widget {
 	function __construct() {
 		    // Widget Backend information
