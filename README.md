@@ -13,6 +13,12 @@ Filter methods
 Before/After form output methods  
 Custom form fields creation   
 
+## Install
+
+`composer require wpbp/widgets-helper:dev-master`
+
+[composer-php52](https://github.com/composer-php52/composer-php52) supported.
+
 ## Example
 
 ```php
