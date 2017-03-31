@@ -75,6 +75,7 @@ if ( !class_exists( 'WPH_Widget' ) ) {
 			$form = $this->create_fields();
 
 			echo $form;
+			do_action('wph_print_form');
 		}
 
 		/**
