@@ -30,12 +30,12 @@ if ( !class_exists( 'WPH_Widget' ) ) {
 		function create_widget( $args ) {
 			// settings some defaults
 			$defaults = array(
-			    'label' => '',
-			    'description' => '',
-			    'width' => array(),
-			    'height' => array(),
-			    'fields' => array(),
-			    'options' => array(),
+				'label' => '',
+				'description' => '',
+				'width' => array(),
+				'height' => array(),
+				'fields' => array(),
+				'options' => array(),
 			);
 
 			// parse and merge args with defaults
@@ -51,7 +51,7 @@ if ( !class_exists( 'WPH_Widget' ) ) {
 			$this->height = $height;
 
 			// check options
-			$this->options = array( 'classname' => $this->slug, 'description' => $description );
+			$this->options = array( 'classname' => $this->slug, 'description' => $description, 'cache' => false );
 			if ( !empty( $options ) ) {
 				$this->options = array_merge( $this->options, $options );
 			}
@@ -72,7 +72,18 @@ if ( !class_exists( 'WPH_Widget' ) ) {
 		 */
 		function form( $instance ) {
 			$this->instance = $instance;
-			$form = $this->create_fields();
+			$form = '';
+			$key = $this->options[ 'classname' ] . '_' . $widget_id;
+			if ( $this->options[ 'cache' ] === true ) {
+				$widget_id = $this->get_field_id( 'title' );
+				$form = get_transient( $key );
+			}
+			if ( empty( $form ) ) {
+				$form = $this->create_fields();
+				if ( $this->options[ 'cache' ] === true ) {
+					set_transient( $key, $form, DAY_IN_SECONDS );
+				}
+			}
 
 			echo $form;
 			do_action('wph_print_form');
@@ -767,10 +778,10 @@ if ( !class_exists( 'WPH_Widget' ) ) {
 			$out .= '> ';
 			$selected = isset( $key[ 'value' ] ) ? $key[ 'value' ] : $key[ 'std' ];
 			$args = array(
-			    'post_type' => $key[ 'posttype' ],
-			    'order' => 'ASC',
-			    'orderby' => 'title',
-			    'posts_per_page' => -1,
+				'post_type' => $key[ 'posttype' ],
+				'order' => 'ASC',
+				'orderby' => 'title',
+				'posts_per_page' => -1,
 			);
 			$options_posts_obj = get_posts( $args );
 			foreach ( $options_posts_obj as $field_ID ) {
