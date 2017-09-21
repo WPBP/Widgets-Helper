@@ -86,7 +86,7 @@ if ( !class_exists( 'WPH_Widget' ) ) {
 			}
 
 			echo $form;
-			do_action('wph_print_form');
+			do_action( 'wph_print_form' );
 		}
 
 		/**
