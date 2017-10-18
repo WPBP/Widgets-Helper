@@ -13,7 +13,7 @@
  * @license      GPLv2
  * @version      1.6-enhancements
  */
-if ( !class_exists( 'WPH_Widget' ) ) {
+if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 
 	class WPH_Widget extends WP_Widget {
 
