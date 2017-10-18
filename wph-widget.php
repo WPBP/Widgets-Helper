@@ -73,9 +73,9 @@ if ( !class_exists( 'WPH_Widget' ) ) {
 		function form( $instance ) {
 			$this->instance = $instance;
 			$form = '';
-			$key = $this->options[ 'classname' ] . '_' . $widget_id;
 			if ( $this->options[ 'cache' ] === true ) {
 				$widget_id = $this->get_field_id( 'title' );
+				$key = $this->options[ 'classname' ] . '_' . $widget_id;
 				$form = get_transient( $key );
 			}
 			if ( empty( $form ) ) {
