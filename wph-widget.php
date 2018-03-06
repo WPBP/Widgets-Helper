@@ -115,9 +115,8 @@ if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 				if ( isset( $key[ 'filter' ] ) ) {
 					$instance[ $slug ] = $this->filter( $key[ 'filter' ], $new_instance[ $slug ] );
 				} else {
-					if ( isset( $new_instance[ $slug ] ) ) {
-						$instance[ $slug ] = strip_tags( $new_instance[ $slug ] );
-					}
+					@$instance[ $slug ] = strip_tags( $new_instance[ $slug ] );
+
 				}
 			}
 
