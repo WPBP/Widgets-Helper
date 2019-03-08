@@ -32,6 +32,7 @@ if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 			$defaults = array(
 				'label' => '',
 				'description' => '',
+				'slug' => '',
 				'width' => array(),
 				'height' => array(),
 				'fields' => array(),
@@ -45,7 +46,7 @@ if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 			extract( $args, EXTR_SKIP );
 
 			// set the widget vars
-			$this->slug = sanitize_title( $label );
+			$this->slug = $slug;
 			$this->fields = $fields;
 			$this->width = $width;
 			$this->height = $height;
