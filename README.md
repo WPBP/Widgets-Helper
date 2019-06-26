@@ -3,15 +3,15 @@
 ![Downloads](https://img.shields.io/packagist/dt/wpbp/widgets-helper.svg) 
 
 A class that extends the built-in WP_Widget class to provide an easier/faster way to create Widgets for WordPress.   
-This is a fork of the original version with updates from the pull request on the official projects and few little improvements.
+This is a fork of the original version with updates from the pull requests on the official repo and few little improvements.
 
 ## Features
 
-Automatic fields creation  
-Validation methods  
-Filter methods  
-Before/After form output methods  
-Custom form fields creation   
+* Automatic fields creation  
+* Validation methods  
+* Filter methods  
+* Before/After form output methods  
+* Custom form fields creation   
 
 ## Install
 
