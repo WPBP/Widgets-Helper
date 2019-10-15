@@ -33,6 +33,7 @@ if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 				'label' => '',
 				'description' => '',
 				'slug' => '',
+				'classname' => '',
 				'width' => array(),
 				'height' => array(),
 				'fields' => array(),
@@ -46,13 +47,16 @@ if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 			extract( $args, EXTR_SKIP );
 
 			// set the widget vars
-			$this->slug = $slug;
+			$this->classname = $slug;
 			$this->fields = $fields;
 			$this->width = $width;
 			$this->height = $height;
+			if( !empty( $classname ) ) {
+				$this->classname = $classname;
+			}
 
 			// check options
-			$this->options = array( 'classname' => $this->slug, 'description' => $description, 'cache' => false );
+			$this->options = array( 'classname' => $this->classname, 'description' => $description, 'cache' => false );
 			if ( !empty( $options ) ) {
 				$this->options = array_merge( $this->options, $options );
 			}
