@@ -47,6 +47,7 @@ if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 			extract( $args, EXTR_SKIP );
 
 			// set the widget vars
+			$this->slug = $slug;
 			$this->classname = $slug;
 			$this->fields = $fields;
 			$this->width = $width;
