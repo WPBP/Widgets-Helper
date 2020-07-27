@@ -47,7 +47,6 @@ if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 			extract( $args, EXTR_SKIP );
 
 			// set the widget vars
-			$this->slug = $slug;
 			$this->classname = $slug;
 			$this->fields = $fields;
 			$this->width = $width;
@@ -55,6 +54,13 @@ if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
 			if( !empty( $classname ) ) {
 				$this->classname = $classname;
 			}
+			// Workaround for https://core.trac.wordpress.org/ticket/44098#comment:2
+			if( empty( $slug ) ) {
+				$slug = preg_replace( '/(wp_)?widget_/', '', strtolower( get_class( $this ) ) );
+				$slug = explode( '\\', $slug );
+				$slug = end( $slug );
+			}
+			$this->slug = $slug;
 
 			// check options
 			$this->options = array( 'classname' => $this->classname, 'description' => $description, 'cache' => false );
