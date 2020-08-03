@@ -12,5 +12,5 @@
  * @version      1.0.8
  */
 if ( !class_exists( 'WPH_Widget' ) && class_exists( 'WP_Widget' ) ) {
-	include_once('class.wph-widget.php');
+	include_once dirname( __FILE__ ) . '/class.wph-widget.php';
 }
