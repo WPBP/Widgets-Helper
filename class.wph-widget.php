@@ -122,11 +122,9 @@ class WPH_Widget extends WP_Widget {
                 }
             }
             
+            @$instance[$slug] = strip_tags($new_instance[$slug]);
             if (isset($key['filter'])) {
                 $instance[$slug] = $this->filter($key['filter'], $new_instance[$slug]);
-            } else {
-                @$instance[$slug] = strip_tags($new_instance[$slug]);
-                
             }
         }
         
@@ -253,9 +251,7 @@ class WPH_Widget extends WP_Widget {
                 return;
             
             case 'natural_not_zero':
-                if (!preg_match('/^[0-9]+$/', $value))
-                    return false;
-                if ($value == 0)
+                if ($value == 0) || (!preg_match('/^[0-9]+$/', $value))
                     return false;
                 return true;
                 return;
@@ -263,9 +259,8 @@ class WPH_Widget extends WP_Widget {
             default:
                 if (method_exists($this, $rule)) {
                     return $this->$rule($value);
-                } else {
-                    return false;
                 }
+                return false;
                 break;
         }
     }
