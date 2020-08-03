@@ -251,7 +251,7 @@ class WPH_Widget extends WP_Widget {
                 return;
             
             case 'natural_not_zero':
-                if ($value == 0) || (!preg_match('/^[0-9]+$/', $value))
+                if ($value == 0 || !preg_match('/^[0-9]+$/', $value))
                     return false;
                 return true;
                 return;
