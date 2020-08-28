@@ -689,7 +689,8 @@ class WPH_Widget extends WP_Widget {
             }
             $taxonomy = get_taxonomy($tax);
             $terms    = get_terms($taxonomy->name, array(
-                'orderby' => 'name'
+                'orderby' => 'name',
+                'parent'  => 0,
             ));
             $out .= '<div class="inright">';
             $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
@@ -708,6 +709,17 @@ class WPH_Widget extends WP_Widget {
                 }
                 $out .= '> ' . esc_html($term->name) . ' </option>';
             }
+            $subterms = get_terms($taxonomy->name,  array(
+				'parent'   => $term->term_id
+			) );
+
+			foreach ($subterms as $subterm) {
+				$out .= '<option value="' . esc_attr__($subterm->slug) . '" ';
+				if (esc_attr($selected) == $subterm->slug) {
+					$out .= ' selected="selected" ';
+				}
+				$out .= '> - ' . esc_html($subterm->name) . ' </option>';
+			}
             $out .= ' </select> ';
             $out .= '</div>';
         endforeach;
