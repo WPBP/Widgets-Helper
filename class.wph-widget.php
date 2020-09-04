@@ -9,7 +9,7 @@
  * @subpackage   WPH Widget Class
  * @author       Matt Varone & riesurya & Mte90
  * @license      GPLv2
- * @version      1.0.8
+ * @version      1.0.12
  */
 
 class WPH_Widget extends WP_Widget {
@@ -61,8 +61,7 @@ class WPH_Widget extends WP_Widget {
         // check options
         $this->options = array(
             'classname' => $this->classname,
-            'description' => $description,
-            'cache' => false
+            'description' => $description
         );
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
@@ -82,21 +81,8 @@ class WPH_Widget extends WP_Widget {
      * @return   void
      */
     function form($instance) {
-        $this->instance = $instance;
-        $form           = '';
-        if ($this->options['cache'] === true) {
-            $widget_id = $this->get_field_id('title');
-            $key       = $this->options['classname'] . '_' . $widget_id;
-            $form      = get_transient($key);
-        }
-        if (empty($form)) {
-            $form = $this->create_fields();
-            if ($this->options['cache'] === true) {
-                set_transient($key, $form, DAY_IN_SECONDS);
-            }
-        }
-        
-        echo $form;
+        $this->instance = $instance;        
+        echo $this->create_fields();
         do_action('wph_print_form');
     }
     
