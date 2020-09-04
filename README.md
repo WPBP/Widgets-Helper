@@ -29,7 +29,7 @@ class MV_My_Recent_Posts_Widget extends WPH_Widget {
 				'label' => __( 'My Recent Posts', 'mv-my-recente-posts' ),
 				'description' => __( 'My Recent Posts Widget Description', 'mv-my-recente-posts' ),
 				'slug' => 'my_recent_posts',
-				'options' => array( 'cache' => true )
+				'options' => array() //classname, description
 			);
 
 			$args['fields'] = array(
