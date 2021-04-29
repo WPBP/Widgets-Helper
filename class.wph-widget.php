@@ -400,7 +400,7 @@ class WPH_Widget extends WP_Widget {
         
         $value = isset($key['value']) ? $key['value'] : $key['std'];
         
-        $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="' . esc_attr__($value) . '" ';
+        $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="' . esc_attr($value) . '" ';
         
         if (isset($key['size'])) {
             $out .= 'size="' . esc_attr($key['size']) . '" ';
@@ -507,7 +507,7 @@ class WPH_Widget extends WP_Widget {
         $selected = isset($key['value']) ? $key['value'] : $key['std'];
         
         foreach ($key['fields'] as $field => $option) {
-            $out .= '<option value="' . esc_attr__($option['value']) . '" ';
+            $out .= '<option value="' . esc_attr($option['value']) . '" ';
             
             if (esc_attr($selected) == $option['value']) {
                 $out .= ' selected="selected" ';
@@ -591,7 +591,7 @@ class WPH_Widget extends WP_Widget {
         
         $value = isset($key['value']) ? $key['value'] : $key['std'];
         
-        $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="' . esc_attr__($value) . '" ';
+        $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="' . esc_attr($value) . '" ';
         
         if (isset($key['size'])) {
             $out .= 'size="' . esc_attr($key['size']) . '" ';
@@ -642,7 +642,7 @@ class WPH_Widget extends WP_Widget {
             $taxonomy      = get_taxonomy($tax);
             $posttypes_obj = $taxonomy->object_type;
             foreach ($posttypes_obj as $posttype_obj => $posttype) {
-                $out .= '<option value="' . esc_attr__($taxonomy->name) . '" ';
+                $out .= '<option value="' . esc_attr($taxonomy->name) . '" ';
                 if (esc_attr($selected) == $taxonomy->name) {
                     $out .= ' selected="selected" ';
                 }
@@ -689,7 +689,7 @@ class WPH_Widget extends WP_Widget {
             $out .= '>Any Categories</option>';
             foreach ($terms as $term) {
                 //make array as pattern ( $term->taxonomy , $term->name);
-                $out .= '<option value="' . esc_attr__($term->slug) . '" ';
+                $out .= '<option value="' . esc_attr($term->slug) . '" ';
                 if (esc_attr($selected) == $term->slug) {
                     $out .= ' selected="selected" ';
                 }
@@ -700,7 +700,7 @@ class WPH_Widget extends WP_Widget {
                 ) );
 
                 foreach ($subterms as $subterm) {
-                    $out .= '<option value="' . esc_attr__($subterm->slug) . '" ';
+                    $out .= '<option value="' . esc_attr($subterm->slug) . '" ';
                     if (esc_attr($selected) == $subterm->slug) {
                         $out .= ' selected="selected" ';
                     }
@@ -734,7 +734,7 @@ class WPH_Widget extends WP_Widget {
         $selected = isset($key['value']) ? $key['value'] : $key['std'];
         $pages    = get_pages('sort_column=post_parent,menu_order');
         foreach ($pages as $page) {
-            $out .= '<option value="' . esc_attr__($page->ID) . '" ';
+            $out .= '<option value="' . esc_attr($page->ID) . '" ';
             if (esc_attr($selected) == $page->ID) {
                 $out .= ' selected="selected" ';
             }
@@ -772,7 +772,7 @@ class WPH_Widget extends WP_Widget {
         );
         $options_posts_obj = get_posts($args);
         foreach ($options_posts_obj as $field_ID) {
-            $out .= '<option value="' . esc_attr__($field_ID->ID) . '" ';
+            $out .= '<option value="' . esc_attr($field_ID->ID) . '" ';
             if (esc_attr($selected) == $field_ID->ID) {
                 $out .= ' selected="selected" ';
             }
@@ -797,7 +797,7 @@ class WPH_Widget extends WP_Widget {
     function create_field_hidden($key, $out = "") {
         $out .= '<input type="hidden" ';
         $value = isset($key['value']) ? $key['value'] : $key['std'];
-        $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="' . esc_attr__($value) . '" ';
+        $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="' . esc_attr($value) . '" ';
         $out .= ' />';
         return $out;
     }
