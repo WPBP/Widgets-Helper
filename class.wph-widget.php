@@ -700,11 +700,13 @@ class WPH_Widget extends WP_Widget {
                 ) );
 
                 foreach ($subterms as $subterm) {
-                    $out .= '<option value="' . esc_attr($subterm->slug) . '" ';
-                    if (esc_attr($selected) == $subterm->slug) {
-                        $out .= ' selected="selected" ';
+                    if ( is_object($subterm) ) {
+                        $out .= '<option value="' . esc_attr($subterm->slug) . '" ';
+                        if (esc_attr($selected) == $subterm->slug) {
+                            $out .= ' selected="selected" ';
+                        }
+                        $out .= '> - ' . esc_html($subterm->name) . ' </option>';
                     }
-                    $out .= '> - ' . esc_html($subterm->name) . ' </option>';
                 }
             }
             $out .= ' </select> ';
