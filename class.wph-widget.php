@@ -304,8 +304,10 @@ class WPH_Widget extends WP_Widget {
         $out = $this->before_create_fields($out);
         
         if (!empty($this->fields)) {
-            foreach ($this->fields as $key) {
-                $out .= $this->create_field($key);
+           foreach ($this->fields as $key) {
+				if ( is_array($key) ) {
+					$out .= $this->create_field($key);
+				}
             }
         }
         
