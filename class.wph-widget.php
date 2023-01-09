@@ -102,15 +102,18 @@ class WPH_Widget extends WP_Widget {
         foreach ($this->fields as $key) {
             $slug = $key['id'];
             
-            if (isset($key['validate'])) {
-                if (false === $this->validate($key['validate'], $new_instance[$slug])) {
-                    return $instance;
+            if (isset($new_instance[$slug])) {
+                if (isset($key['validate'])) {
+                    if (false === $this->validate($key['validate'], $new_instance[$slug])) {
+                        return $instance;
+                    }
                 }
-            }
-            
-            @$instance[$slug] = strip_tags($new_instance[$slug]);
-            if (isset($key['filter'])) {
-                $instance[$slug] = $this->filter($key['filter'], $new_instance[$slug]);
+
+                $instance[$slug] = strip_tags($new_instance[$slug]);
+
+                if (isset($key['filter'])) {
+                    $instance[$slug] = $this->filter($key['filter'], $new_instance[$slug]);
+                }
             }
         }
         
