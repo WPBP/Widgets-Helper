@@ -13,12 +13,12 @@
  */
 
 class WPH_Widget extends WP_Widget {
-    
+
     /**
-     * Create Widget 
-     * 
-     * Creates a new widget and sets it's labels, description, fields and options 
-     * 
+     * Create Widget
+     *
+     * Creates a new widget and sets it's labels, description, fields and options
+     *
      * @access   public
      * @param    array
      * @return   void
@@ -35,13 +35,13 @@ class WPH_Widget extends WP_Widget {
             'fields' => array(),
             'options' => array()
         );
-        
+
         // parse and merge args with defaults
         $args = wp_parse_args($args, $defaults);
-        
+
         // extract each arg to its own variable
         extract($args, EXTR_SKIP);
-        
+
         // set the widget vars
         $this->classname = $slug;
         $this->fields    = $fields;
@@ -57,7 +57,7 @@ class WPH_Widget extends WP_Widget {
             $slug = end($slug);
         }
         $this->slug = $slug;
-        
+
         // check options
         $this->options = array(
             'classname' => $this->classname,
@@ -66,29 +66,29 @@ class WPH_Widget extends WP_Widget {
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
-        
+
         // call WP_Widget to create the widget
         parent::__construct($this->slug, $label, $this->options, $this->width, $this->height);
     }
-    
+
     /**
      * Form
-     * 
-     * Creates the settings form. 
-     * 
+     *
+     * Creates the settings form.
+     *
      * @access   private
      * @param    array
      * @return   void
      */
     function form($instance) {
-        $this->instance = $instance;        
+        $this->instance = $instance;
         echo $this->create_fields();
         do_action('wph_print_form');
     }
-    
+
     /**
      * Update Fields
-     *  
+     *
      * @access   private
      * @param    array
      * @param    array
@@ -96,12 +96,12 @@ class WPH_Widget extends WP_Widget {
      */
     function update($new_instance, $old_instance) {
         $instance = $old_instance;
-        
+
         $this->before_update_fields();
-        
+
         foreach ($this->fields as $key) {
             $slug = $key['id'];
-            
+
             if (isset($new_instance[$slug])) {
                 if (isset($key['validate'])) {
                     if (false === $this->validate($key['validate'], $new_instance[$slug])) {
@@ -116,15 +116,15 @@ class WPH_Widget extends WP_Widget {
                 }
             }
         }
-        
+
         return $this->after_validate_fields($instance);
     }
-    
+
     /**
      * Before Validate Fields
      *
      * Allows to hook code on the update.
-     *  
+     *
      * @access   public
      * @param    string
      * @return   string
@@ -132,10 +132,10 @@ class WPH_Widget extends WP_Widget {
     function before_update_fields() {
         return;
     }
-    
+
     /**
      * After Validate Fields
-     * 
+     *
      * Allows to modify the output after validating the fields.
      *
      * @access   public
@@ -145,10 +145,10 @@ class WPH_Widget extends WP_Widget {
     function after_validate_fields($instance = "") {
         return $instance;
     }
-    
+
     /**
-     * Validate 
-     *  
+     * Validate
+     *
      * @access   private
      * @param    string
      * @param    string
@@ -156,23 +156,23 @@ class WPH_Widget extends WP_Widget {
      */
     function validate($rules, $value) {
         $rules = explode('|', $rules);
-        
+
         if (empty($rules) || count($rules) < 1) {
             return true;
         }
-        
+
         foreach ($rules as $rule) {
             if (false === $this->do_validation($rule, $value)) {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     /**
-     * Filter 
-     *  
+     * Filter
+     *
      * @access   private
      * @param    string
      * @param    string
@@ -180,21 +180,21 @@ class WPH_Widget extends WP_Widget {
      */
     function filter($filters, $value) {
         $filters = explode('|', $filters);
-        
+
         if (empty($filters) || count($filters) < 1) {
             return $value;
         }
-        
+
         foreach ($filters as $filter) {
             $value = $this->do_filter($filter, $value);
         }
-        
+
         return $value;
     }
-    
+
     /**
      * Do Validation Rule
-     *  
+     *
      * @access   private
      * @param    string
      * @param    string
@@ -202,49 +202,49 @@ class WPH_Widget extends WP_Widget {
      */
     function do_validation($rule, $value = "") {
         switch ($rule) {
-            
+
             case 'alpha':
                 return ctype_alpha($value);
                 break;
-            
+
             case 'alpha_numeric':
                 return ctype_alnum($value);
                 break;
-            
+
             case 'alpha_dash':
                 return preg_match('/^[a-z0-9-_]+$/', $value);
                 break;
-            
+
             case 'numeric':
                 return ctype_digit($value);
                 break;
-            
+
             case 'integer':
                 return ( bool ) preg_match('/^[\-+]?[0-9]+$/', $value);
                 break;
-            
+
             case 'boolean':
                 return is_bool($value);
                 break;
-            
+
             case 'email':
                 return is_email($value);
                 break;
-            
+
             case 'decimal':
                 return ( bool ) preg_match('/^[\-+]?[0-9]+\.[0-9]+$/', $value);
                 break;
-            
+
             case 'natural':
                 return ( bool ) preg_match('/^[0-9]+$/', $value);
                 return;
-            
+
             case 'natural_not_zero':
                 if ($value == 0 || !preg_match('/^[0-9]+$/', $value))
                     return false;
                 return true;
                 return;
-            
+
             default:
                 if (method_exists($this, $rule)) {
                     return $this->$rule($value);
@@ -253,10 +253,10 @@ class WPH_Widget extends WP_Widget {
                 break;
         }
     }
-    
+
     /**
      * Do Filter
-     *  
+     *
      * @access   private
      * @param    string
      * @param    string
@@ -267,23 +267,23 @@ class WPH_Widget extends WP_Widget {
             case 'strip_tags':
                 return strip_tags($value);
                 break;
-            
+
             case 'wp_strip_all_tags':
                 return wp_strip_all_tags($value);
                 break;
-            
+
             case 'esc_attr':
                 return esc_attr($value);
                 break;
-            
+
             case 'esc_url':
                 return esc_url($value);
                 break;
-            
+
             case 'esc_textarea':
                 return esc_textarea($value);
                 break;
-            
+
             default:
                 if (method_exists($this, $filter)) {
                     return $this->$filter($value);
@@ -293,37 +293,37 @@ class WPH_Widget extends WP_Widget {
                 break;
         }
     }
-    
+
     /**
-     * Create Fields 
-     * 
-     * Creates each field defined. 
-     * 
+     * Create Fields
+     *
+     * Creates each field defined.
+     *
      * @access   private
      * @param    string
      * @return   string
      */
     function create_fields($out = "") {
         $out = $this->before_create_fields($out);
-        
+
         if (!empty($this->fields)) {
            foreach ($this->fields as $key) {
-				if ( is_array($key) ) {
-					$out .= $this->create_field($key);
-				}
+                if ( is_array($key) ) {
+                    $out .= $this->create_field($key);
+                }
             }
         }
-        
+
         $out = $this->after_create_fields($out);
-        
+
         return $out;
     }
-    
+
     /**
      * Before Create Fields
      *
      * Allows to modify code before creating the fields.
-     *  
+     *
      * @access   public
      * @param    string
      * @return   string
@@ -331,10 +331,10 @@ class WPH_Widget extends WP_Widget {
     function before_create_fields($out = "") {
         return $out;
     }
-    
+
     /**
      * After Create Fields
-     * 
+     *
      * Allows to modify code after creating the fields.
      *
      * @access   public
@@ -344,10 +344,10 @@ class WPH_Widget extends WP_Widget {
     function after_create_fields($out = "") {
         return $out;
     }
-    
+
     /**
      * Create Fields
-     *  
+     *
      * @access   private
      * @param    string
      * @param    string
@@ -356,39 +356,39 @@ class WPH_Widget extends WP_Widget {
     function create_field($key, $out = "") {
         /* Set Defaults */
         $key['std'] = isset($key['std']) ? $key['std'] : "";
-        
+
         $slug = $key['id'];
-        
+
         if (isset($this->instance[$slug])) {
             $key['value'] = empty($this->instance[$slug]) ? '' : strip_tags($this->instance[$slug]);
         } else {
             unset($key['value']);
         }
-        
+
         /* Set field id and name  */
         $key['_id']   = $this->get_field_id($slug);
         $key['_name'] = $this->get_field_name($slug);
-        
+
         /* Set field type */
         if (!isset($key['type'])) {
             $key['type'] = 'text';
         }
-        
+
         /* Prefix method */
         $field_method = 'create_field_' . str_replace('-', '_', $key['type']);
-        
+
         /* Check for <p> Class */
         $p = (isset($key['class-p'])) ? '<p class="' . $key['class-p'] . '">' : '<p>';
-        
+
         /* Run method */
         if (method_exists($this, $field_method)) {
             return $p . $this->$field_method($key) . '</p>';
         }
     }
-    
+
     /**
      * Field Text
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -396,33 +396,33 @@ class WPH_Widget extends WP_Widget {
      */
     function create_field_text($key, $out = "") {
         $out .= $this->create_field_label($key['name'], $key['_id']) . '<br/>';
-        
+
         $out .= '<input type="text" ';
-        
+
         if (isset($key['class'])) {
             $out .= 'class="' . esc_attr($key['class']) . '" ';
         }
-        
+
         $value = isset($key['value']) ? $key['value'] : $key['std'];
-        
+
         $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="' . esc_attr($value) . '" ';
-        
+
         if (isset($key['size'])) {
             $out .= 'size="' . esc_attr($key['size']) . '" ';
         }
-        
+
         $out .= ' />';
-        
+
         if (isset($key['desc'])) {
             $out .= '<br/><small class="description">' . esc_html($key['desc']) . '</small>';
         }
-        
+
         return $out;
     }
-    
+
     /**
      * Field Textarea
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -430,37 +430,37 @@ class WPH_Widget extends WP_Widget {
      */
     function create_field_textarea($key, $out = "") {
         $out .= $this->create_field_label($key['name'], $key['_id']) . '<br/>';
-        
+
         $out .= '<textarea ';
-        
+
         if (isset($key['class'])) {
             $out .= 'class="' . esc_attr($key['class']) . '" ';
         }
-        
+
         if (isset($key['rows'])) {
             $out .= 'rows="' . esc_attr($key['rows']) . '" ';
         }
-        
+
         if (isset($key['cols'])) {
             $out .= 'cols="' . esc_attr($key['cols']) . '" ';
         }
-        
+
         $value = isset($key['value']) ? $key['value'] : $key['std'];
-        
+
         $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '">' . esc_html($value);
-        
+
         $out .= '</textarea>';
-        
+
         if (isset($key['desc'])) {
             $out .= '<br/><small class="description">' . esc_html($key['desc']) . '</small>';
         }
-        
+
         return $out;
     }
-    
+
     /**
      * Field Checkbox
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -468,31 +468,31 @@ class WPH_Widget extends WP_Widget {
      */
     function create_field_checkbox($key, $out = "") {
         $out .= $this->create_field_label($key['name'], $key['_id']);
-        
+
         $out .= ' <input type="checkbox" ';
-        
+
         if (isset($key['class'])) {
             $out .= 'class="' . esc_attr($key['class']) . '" ';
         }
-        
+
         $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="1" ';
-        
+
         if ((isset($key['value']) && $key['value'] == 1) OR (!isset($key['value']) && $key['std'] == 1)) {
             $out .= ' checked="checked" ';
         }
-        
+
         $out .= ' /> ';
-        
+
         if (isset($key['desc'])) {
             $out .= '<br/><small class="description">' . esc_html($key['desc']) . '</small>';
         }
-        
+
         return $out;
     }
-    
+
     /**
      * Field Select
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -500,39 +500,39 @@ class WPH_Widget extends WP_Widget {
      */
     function create_field_select($key, $out = "") {
         $out .= $this->create_field_label($key['name'], $key['_id']) . '<br/>';
-        
+
         $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
-        
+
         if (isset($key['class'])) {
             $out .= 'class="' . esc_attr($key['class']) . '" ';
         }
-        
+
         $out .= '> ';
-        
+
         $selected = isset($key['value']) ? $key['value'] : $key['std'];
-        
+
         foreach ($key['fields'] as $field => $option) {
             $out .= '<option value="' . esc_attr($option['value']) . '" ';
-            
+
             if (esc_attr($selected) == $option['value']) {
                 $out .= ' selected="selected" ';
             }
-            
+
             $out .= '> ' . esc_html($option['name']) . '</option>';
         }
-        
+
         $out .= ' </select> ';
-        
+
         if (isset($key['desc'])) {
             $out .= '<br/><small class="description">' . esc_html($key['desc']) . '</small>';
         }
-        
+
         return $out;
     }
-    
+
     /**
      * Field Select with Options Group
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -540,46 +540,46 @@ class WPH_Widget extends WP_Widget {
      */
     function create_field_select_group($key, $out = "") {
         $out .= $this->create_field_label($key['name'], $key['_id']) . '<br/>';
-        
+
         $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
-        
+
         if (isset($key['class'])) {
             $out .= 'class="' . esc_attr($key['class']) . '" ';
         }
-        
+
         $out .= '> ';
-        
+
         $selected = isset($key['value']) ? $key['value'] : $key['std'];
-        
+
         foreach ($key['fields'] as $group => $fields) {
-            
+
             $out .= '<optgroup label="' . $group . '">';
-            
+
             foreach ($fields as $field => $option) {
                 $out .= '<option value="' . esc_attr($option['value']) . '" ';
-                
+
                 if (esc_attr($selected) == $option['value']) {
                     $out .= ' selected="selected" ';
                 }
-                
+
                 $out .= '> ' . esc_html($option['name']) . '</option>';
             }
-            
+
             $out .= '</optgroup>';
         }
-        
+
         $out .= '</select>';
-        
+
         if (isset($key['desc'])) {
             $out .= '<br/><small class="description">' . esc_html($key['desc']) . '</small>';
         }
-        
+
         return $out;
     }
-    
+
     /**
      * Field Number
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -587,33 +587,33 @@ class WPH_Widget extends WP_Widget {
      */
     function create_field_number($key, $out = "") {
         $out .= $this->create_field_label($key['name'], $key['_id']) . '<br/>';
-        
+
         $out .= '<input type="number" ';
-        
+
         if (isset($key['class'])) {
             $out .= 'class="' . esc_attr($key['class']) . '" ';
         }
-        
+
         $value = isset($key['value']) ? $key['value'] : $key['std'];
-        
+
         $out .= 'id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" value="' . esc_attr($value) . '" ';
-        
+
         if (isset($key['size'])) {
             $out .= 'size="' . esc_attr($key['size']) . '" ';
         }
-        
+
         $out .= ' />';
-        
+
         if (isset($key['desc'])) {
             $out .= '<br/><small class="description">' . esc_html($key['desc']) . '</small>';
         }
-        
+
         return $out;
     }
-    
+
     /**
      * Field Label
-     *  
+     *
      * @access   private
      * @param    string
      * @param    string
@@ -623,10 +623,10 @@ class WPH_Widget extends WP_Widget {
     function create_field_label($name = "", $id = "") {
         return '<label for="' . esc_attr($id) . '">' . esc_html($name) . ':</label>';
     }
-    
+
     /**
      * Field Taxonomy
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -634,7 +634,7 @@ class WPH_Widget extends WP_Widget {
      */
     function create_field_taxonomy($key, $out = "") {
         $out .= $this->create_field_label($key['name'], $key['_id']);
-        // Build taxonomy selection boxes      
+        // Build taxonomy selection boxes
         $taxes = get_taxonomies('', 'names');
         $out .= '<div class="inright">';
         $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
@@ -661,10 +661,10 @@ class WPH_Widget extends WP_Widget {
         }
         return $out;
     }
-    
+
     /**
      * Field Taxonomy Term
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -672,7 +672,7 @@ class WPH_Widget extends WP_Widget {
      */
     function create_field_taxonomyterm($key, $out = "") {
         $out .= $this->create_field_label($key['name'], $key['_id']);
-        // Build taxonomy selection boxes      
+        // Build taxonomy selection boxes
         $taxes = get_taxonomies('', 'names');
         foreach ($taxes as $tax):
             if (($tax != $key['taxonomy'])) {
@@ -699,7 +699,7 @@ class WPH_Widget extends WP_Widget {
                     $out .= ' selected="selected" ';
                 }
                 $out .= '> ' . esc_html($term->name) . ' </option>';
-                
+
                 $subterms = get_terms($term->name,  array(
                     'parent'   => $term->term_id
                 ) );
@@ -722,10 +722,10 @@ class WPH_Widget extends WP_Widget {
         }
         return $out;
     }
-    
+
     /**
      * Pages Select
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -748,16 +748,16 @@ class WPH_Widget extends WP_Widget {
             $out .= '>' . esc_html($page->post_title) . '</option>';
         }
         $out .= ' </select> ';
-        
+
         if (isset($key['desc'])) {
             $out .= '<p class="description"><small>' . esc_html($key['desc']) . '</small></p>';
         }
         return $out;
     }
-    
+
     /**
      * Post Select from spesific taxonomy
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -786,16 +786,16 @@ class WPH_Widget extends WP_Widget {
             $out .= '>' . esc_html($field_ID->post_title) . '</option>';
         }
         $out .= ' </select> ';
-        
+
         if (isset($key['desc'])) {
             $out .= '<p class="description"><small>' . esc_html($key['desc']) . '</small></p>';
         }
         return $out;
     }
-    
+
     /**
      * Field Hidden Input
-     *  
+     *
      * @access   private
      * @param    array
      * @param    string
@@ -808,5 +808,18 @@ class WPH_Widget extends WP_Widget {
         $out .= ' />';
         return $out;
     }
-    
+
+    /**
+     * Field custom HTML
+     *
+     * @access   private
+     * @param    array
+     * @param    string
+     * @return   string
+     */
+    function create_field_html($key, $out = "") {
+        $out = $key['desc'];
+        return $out;
+    }
+
 }
