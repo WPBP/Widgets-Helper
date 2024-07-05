@@ -31,9 +31,9 @@ class WPH_Widget extends WP_Widget {
             'slug' => '',
             'classname' => '',
             'width' => array(),
-            'height' => array(),
-            'fields' => array(),
-            'options' => array()
+                          'height' => array(),
+                          'fields' => array(),
+                          'options' => array()
         );
 
         // parse and merge args with defaults
@@ -242,8 +242,8 @@ class WPH_Widget extends WP_Widget {
             case 'natural_not_zero':
                 if ($value == 0 || !preg_match('/^[0-9]+$/', $value))
                     return false;
-                return true;
-                return;
+            return true;
+            return;
 
             default:
                 if (method_exists($this, $rule)) {
@@ -307,7 +307,7 @@ class WPH_Widget extends WP_Widget {
         $out = $this->before_create_fields($out);
 
         if (!empty($this->fields)) {
-           foreach ($this->fields as $key) {
+            foreach ($this->fields as $key) {
                 if ( is_array($key) ) {
                     $out .= $this->create_field($key);
                 }
@@ -640,13 +640,21 @@ class WPH_Widget extends WP_Widget {
         $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
         $out .= '> ';
         $selected = isset($key['value']) ? $key['value'] : $key['std'];
+        $done = array();
         foreach ($taxes as $tax) {
-            if (($tax == 'link_category') or ($tax == 'nav_menu') or (($tax == 'post_format') and !isset($options['post_format']))) {
+            if (in_array($tax,array('link_category', 'nav_menu', 'post_format', 'wp_theme', 'wp_template_part_area', 'wp_pattern_category'))) {
                 continue;
             }
             $taxonomy      = get_taxonomy($tax);
             $posttypes_obj = $taxonomy->object_type;
             foreach ($posttypes_obj as $posttype_obj => $posttype) {
+                if (isset($done[esc_attr($taxonomy->name)])) {
+                    continue;
+                }
+                $done[esc_attr($taxonomy->name)] = 1;
+                if (empty(esc_attr($taxonomy->label))) {
+                    continue;
+                }
                 $out .= '<option value="' . esc_attr($taxonomy->name) . '" ';
                 if (esc_attr($selected) == $taxonomy->name) {
                     $out .= ' selected="selected" ';
@@ -679,43 +687,43 @@ class WPH_Widget extends WP_Widget {
                 continue;
             }
             $taxonomy = get_taxonomy($tax);
-            $terms    = get_terms($taxonomy->name, array(
-                'orderby' => 'name',
-                'parent'  => 0,
-            ));
-            $out .= '<div class="inright">';
-            $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
-            $out .= '> ';
-            $selected = isset($key['value']) ? $key['value'] : $key['std'];
-            $out .= '<option value="any"';
-            if (esc_attr($selected) == 'any') {
+        $terms    = get_terms($taxonomy->name, array(
+            'orderby' => 'name',
+            'parent'  => 0,
+        ));
+        $out .= '<div class="inright">';
+        $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
+        $out .= '> ';
+        $selected = isset($key['value']) ? $key['value'] : $key['std'];
+        $out .= '<option value="any"';
+        if (esc_attr($selected) == 'any') {
+            $out .= ' selected="selected" ';
+        }
+        $out .= '>Any Categories</option>';
+        foreach ($terms as $term) {
+            //make array as pattern ( $term->taxonomy , $term->name);
+            $out .= '<option value="' . esc_attr($term->slug) . '" ';
+            if (esc_attr($selected) == $term->slug) {
                 $out .= ' selected="selected" ';
             }
-            $out .= '>Any Categories</option>';
-            foreach ($terms as $term) {
-                //make array as pattern ( $term->taxonomy , $term->name);
-                $out .= '<option value="' . esc_attr($term->slug) . '" ';
-                if (esc_attr($selected) == $term->slug) {
-                    $out .= ' selected="selected" ';
-                }
-                $out .= '> ' . esc_html($term->name) . ' </option>';
+            $out .= '> ' . esc_html($term->name) . ' </option>';
 
-                $subterms = get_terms($term->name,  array(
-                    'parent'   => $term->term_id
-                ) );
+            $subterms = get_terms($term->name,  array(
+                'parent'   => $term->term_id
+            ) );
 
-                foreach ($subterms as $subterm) {
-                    if ( is_object($subterm) ) {
-                        $out .= '<option value="' . esc_attr($subterm->slug) . '" ';
-                        if (esc_attr($selected) == $subterm->slug) {
-                            $out .= ' selected="selected" ';
-                        }
-                        $out .= '> - ' . esc_html($subterm->name) . ' </option>';
+            foreach ($subterms as $subterm) {
+                if ( is_object($subterm) ) {
+                    $out .= '<option value="' . esc_attr($subterm->slug) . '" ';
+                    if (esc_attr($selected) == $subterm->slug) {
+                        $out .= ' selected="selected" ';
                     }
+                    $out .= '> - ' . esc_html($subterm->name) . ' </option>';
                 }
             }
-            $out .= ' </select> ';
-            $out .= '</div>';
+        }
+        $out .= ' </select> ';
+        $out .= '</div>';
         endforeach;
         if (isset($key['desc'])) {
             $out .= '<p class="description"><small>' . esc_html($key['desc']) . '</small></p>';
