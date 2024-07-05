@@ -687,43 +687,53 @@ class WPH_Widget extends WP_Widget {
                 continue;
             }
             $taxonomy = get_taxonomy($tax);
-        $terms    = get_terms($taxonomy->name, array(
-            'orderby' => 'name',
-            'parent'  => 0,
-        ));
-        $out .= '<div class="inright">';
-        $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
-        $out .= '> ';
-        $selected = isset($key['value']) ? $key['value'] : $key['std'];
-        $out .= '<option value="any"';
-        if (esc_attr($selected) == 'any') {
-            $out .= ' selected="selected" ';
-        }
-        $out .= '>Any Categories</option>';
-        foreach ($terms as $term) {
-            //make array as pattern ( $term->taxonomy , $term->name);
-            $out .= '<option value="' . esc_attr($term->slug) . '" ';
-            if (esc_attr($selected) == $term->slug) {
+            $terms    = get_terms($taxonomy->name, array(
+                'orderby' => 'name',
+                'parent'  => 0,
+            ));
+            $out .= '<div class="inright">';
+            $out .= '<select id="' . esc_attr($key['_id']) . '" name="' . esc_attr($key['_name']) . '" ';
+            $out .= '> ';
+            $selected = isset($key['value']) ? $key['value'] : $key['std'];
+            $out .= '<option value="any"';
+            if (esc_attr($selected) == 'any') {
                 $out .= ' selected="selected" ';
             }
-            $out .= '> ' . esc_html($term->name) . ' </option>';
+            $out .= '>Any Categories</option>';
+            foreach ($terms as $term) {
+                //make array as pattern ( $term->taxonomy , $term->name);
+                $out .= '<option value="' . esc_attr($term->slug) . '" ';
+                if (esc_attr($selected) == $term->slug) {
+                    $out .= ' selected="selected" ';
+                }
+                $out .= '>' . esc_html($term->name);
 
-            $subterms = get_terms($term->name,  array(
-                'parent'   => $term->term_id
-            ) );
+                if (function_exists('pll_get_term_language')) {
+                    $out .= ' (' . pll_get_term_language($term->term_id) . ')';
+                }
 
-            foreach ($subterms as $subterm) {
-                if ( is_object($subterm) ) {
-                    $out .= '<option value="' . esc_attr($subterm->slug) . '" ';
-                    if (esc_attr($selected) == $subterm->slug) {
-                        $out .= ' selected="selected" ';
+                $out .= '</option>';
+
+                $subterms = get_terms($term->name,  array(
+                    'parent'   => $term->term_id
+                ) );
+
+                foreach ($subterms as $subterm) {
+                    if ( is_object($subterm) ) {
+                        $out .= '<option value="' . esc_attr($subterm->slug) . '" ';
+                        if (esc_attr($selected) == $subterm->slug) {
+                            $out .= ' selected="selected" ';
+                        }
+                        $out .= '> - ' . esc_html($subterm->name);
+                        if (function_exists('pll_get_term_language')) {
+                            $out .= ' ' . pll_get_term_language($subterm->term_ID);
+                        }
+                        $out .= '</option>';
                     }
-                    $out .= '> - ' . esc_html($subterm->name) . ' </option>';
                 }
             }
-        }
-        $out .= ' </select> ';
-        $out .= '</div>';
+            $out .= ' </select> ';
+            $out .= '</div>';
         endforeach;
         if (isset($key['desc'])) {
             $out .= '<p class="description"><small>' . esc_html($key['desc']) . '</small></p>';
