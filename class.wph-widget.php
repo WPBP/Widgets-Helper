@@ -13,6 +13,12 @@
  */
 
 class WPH_Widget extends WP_Widget {
+	public $classname;
+	public $fields;
+	public $width;
+	public $height;
+	public $slug;
+	public $options;
 
     /**
      * Create Widget
