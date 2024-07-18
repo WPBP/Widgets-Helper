@@ -120,6 +120,8 @@ class WPH_Widget extends WP_Widget {
                 if (isset($key['filter'])) {
                     $instance[$slug] = $this->filter($key['filter'], $new_instance[$slug]);
                 }
+            } else {
+                $instance[$slug] = '';
             }
         }
 
